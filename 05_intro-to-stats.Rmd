@@ -1,0 +1,347 @@
+# Introduction to Statistics in R
+
+```{r install-05, echo=T, message=FALSE, warning=FALSE, results='hide',cache=TRUE}
+install.packages("ggplot2",  repos = "https://cran.us.r-project.org")
+install.packages("dplyr",  repos = "https://cran.us.r-project.org")
+install.packages("ggfortify",  repos = "https://cran.us.r-project.org")
+```
+
+```{r load-libs-05, echo=T, message=FALSE, warning=FALSE, results='hide'}
+library(ggplot2)
+library(dplyr)
+library(ggfortify)
+```
+
+```{r read-data-05}
+urlfile05a="https://raw.githubusercontent.com/apicellap/data/main/ladybirds_morph_colour.csv"
+lady<-read.csv(url(urlfile05a))
+head(lady)
+```
+
+View data structure: 
+```{r data-structure-05}
+str(lady)
+```
+
+## $\chi$$^{2}$ contingency table analysis 
+
+Create new dataframe, totals:
+```{r summary-df-05}
+totals <- lady %>% #working with this dataframe
+  group_by(Habitat, morph_colour) %>% #we want to represent these groups in the dataframe
+  summarise(total.number = sum(number)) #add up the numbers of each group using the new object total.number
+totals
+```
+
+Create bar chart: 
+```{r bar-graph-05}
+base_plot<-ggplot(totals, aes(x=Habitat, y=total.number,
+                  fill = morph_colour)) + #fill is used when there is something like a bar that can be filled with color 
+                                          #if this were color = morph_colour, then the argument would affect the bar's outline
+  geom_bar(
+    stat = 'identity', #this tells ggplot not to calculate anything from the data and just display the data as they are in the dataframe
+    position = 'dodge' #this is request to put the two bars in each Habitat group next to each other 
+                       #if it's not used, a stacked barplot would be printed 
+  ) 
+base_plot
+```
+
+
+```{r new-colors-base-plot-05}
+base_plot +   
+  scale_fill_manual(values = c(black = "black", red = "red")) #the text in "" are the colors we are instructing R to fill the bars with 
+
+```
+
+- Null hypothesis: there is no association between the color of the birds and their habitat 
+  - My opinion: data suggest that there is a higher proportion of colored birds in the industrial habitat. We should reject the null hypothesis (pre-stats)
+  - to rigorously test this, a chi-squared test must be performed 
+
+## Making the  $\chi$$^{2}$ Test 
+
+Use `xtabs()` function to generate a contingency table: 
+```{r contigency-table-05}
+lady.mat <-xtabs(                     #function converts dataframe into a matrix, which is different from a dataframe
+                  number ~ Habitat + morph_colour, #cross-tabulate the number of column counts in the dataframe by the Habitat and morph_colour variables
+                 data = lady) 
+lady.mat
+```
+
+
+Perform a $\chi$$^{2}$ test on the matrix: 
+```{r chi^2-05}
+lady.chi<-chisq.test(lady.mat) #chi squared test function performed on matrix 
+lady.chi
+```
+
+- the p value is  0.00001239 - this is the probability that the pattern arose by chance. 
+  - It is lower than 0.05, so we can reject the null hypothesis 
+  
+  
+```{r names-bird-df-05}
+names(lady.chi) #can examine all of the parts of the test mechanics 
+```
+
+## Two-sample t-test 
+
+- The two-sample t-test compares the means of two groups of numeric values 
+- It is appropriate when the sample sizes of these two groups is small 
+- The analysis makes the following assumptions about the data: 
+  - The data are normally distributed 
+  - The variances of the data are equivalent 
+  
+  
+```{r read-ozone-05}
+urlfile05b="https://raw.githubusercontent.com/apicellap/data/main/ozone.csv"
+ozone<-read.csv(url(urlfile05b))
+glimpse(ozone)
+```
+
+### The first step: Plot your data
+
+Create histograms of the data, by Garden.location variable: 
+```{r ozone-histogram-05}
+ggplot(ozone, aes(x=Ozone))+ #since this is a histogram, x must be a continuous variable; cannot be categorical 
+  geom_histogram(binwidth=10) + 
+  facet_wrap(~Garden.location, #Divide data up into groups by this variable 
+            ncol=1 ) +  #stacks the graphs on top of each other - 1 column 
+  theme_bw()
+```
+
+- graph shows that assumptions of normality and equality of variance are met 
+  - R has functions to evaluate these aspects more rigorously too 
+
+Count the number of observations when variable is 'East': 
+```{r count-obs-05}
+x<-sum(with(ozone, Garden.location == "East")) 
+x
+```
+
+
+```{r ozone-summarystats-05}
+summary<-ozone %>% 
+  group_by(Garden.location) %>% 
+  summarise(mean = mean(Ozone), SE = (sd(Ozone))/sqrt(x))
+summary
+```
+
+Plot the ozone data as a barplot: 
+```{r ozone-barplot-05}
+OzBrP<-ggplot(summary, aes(x = Garden.location, y = mean)) + #x defined as grazing treatment, y as fruit production
+  geom_col() + 
+  geom_errorbar(aes(x=Garden.location, ymin=mean -SE, ymax=mean*1+SE, width=.2),
+                                            position = 'dodge')
+OzBrP
+```
+
+Plot the ozone data as a boxplot: 
+```{r ozone-boxplot-05}
+OzBxP <-ggplot(ozone, aes(x = Garden.location, y = Ozone)) + 
+  geom_boxplot()
+OzBxP
+```
+
+- null hypothesis: there is no difference in ozone levels between the East and West garden locations 
+- my opinion based on the boxplot - reject the null hypothesis 
+
+### Two sample t-test analysis
+
+Perform two sample t-test on the ozone dataset: 
+```{r ozone-ttest-05}
+t.test(Ozone ~ Garden.location, #expression means do ozone levels vary as a function of location? That's how the ~ reads 
+       data = ozone)
+```
+
+- the default of this two sample t-test is the Welch's version 
+  - In Welch version, the assumption about equal variance is relaxed and allows that you do not have to test for equal variance
+- The GSwR authors suggest not testing for equal variance 
+- note regarding the Confidence interval (CI): the line about the 95% CI is 8.1-24.1. Since this range does not include 0 says that the means are statistically different from each other. This is congruent with the p value of the t-test 
+
+## Linear models 
+
+- Linear models are a class of analyses that include regression, multiple regression, ANOVA, and ANCOVA
+  - they are centered around a similiar framework of ideas such as a common set of assumptions about the data like the idea that the data are normally distributed 
+  
+## Simple linear regression 
+
+- This section focuses on a dataset that compares plant growth rates to soil moisture content 
+- The response (dependent) variable is that of plant growth rate 
+- Plant growth rate is plotted against the explanatory (independent) variable, soil moisture content 
+  - This variable is a continuous, numeric variable which does not have categories
+
+Read and view structure of the data: 
+```{r read-plant-growth-05}
+urlfile05c="https://raw.githubusercontent.com/apicellap/data/main/plant.growth.rate.csv"
+plant_gr<-read.csv(url(urlfile05c))
+glimpse(plant_gr) #two continuous (numeric) variables. they have no categories 
+```
+
+### Getting and plotting the data
+
+Plot the plant growth (pg) data: 
+```{r pg-scatterplot-05}
+ggplot(plant_gr,
+       aes(x=soil.moisture.content, y=plant.growth.rate)) +
+  geom_point()+ 
+  ylab("Plant Growth Rate (mm/week)") + 
+  theme_bw()
+```
+
+- Plot shows that there is a probably a positive linear relationship between the two variables 
+  - There is a slope of about 15 mm/week 
+  - preliminary analysis: probably will reject the null hypothesis that soil moisture does not affect plant growth 
+
+### Making a simple linear regression happen
+
+Create a linear model:
+```{r model-05}
+model_pgr <- lm(plant.growth.rate ~ soil.moisture.content, data = plant_gr) #plant growth rate is a function of soil moisture content
+model_pgr
+```
+
+### Assumptions first
+
+Check assumptions with ggfortify: 
+```{r assumption-check-05, warning=FALSE}
+autoplot(model_pgr, 
+         smooth.colour = NA)
+```
+
+- ggfortify plots:
+  - Top left - informs us on whether the line is an appropriate fit to the data; flat line means model is a good fit. Humps/valleys -> poor fit 
+  - Top right - dots = residuals; dashes line = expectation under normal distribution. Better tool than histogram to assess normal distribution
+  - Bottom left - evaluates assumption of equal variance. linear models assume that variance is constant over all predicted values of the response variable. There should be no pattern 
+  - Bottom right - evaluates leverage. Used to detect influential datapoints that will shift the gradient more than expected + also for outliers 
+- null hypothesis: soil moisture has no effect on plant growth 
+
+### Now the interpretation
+
+Produce a sum of squares table: 
+```{r anova-table-05}
+anova(model_pgr)
+```
+
+- Output: 
+- Large F value indicates that error variance is small relative to the variance attributed to the explanatory variable 
+  - This leads to the tiny p value. 
+    - Both are good indications that the effect seen in the data isn't the result of chance 
+    
+Produce a summary table: 
+```{r summary-table-05}
+summary(model_pgr) 
+```
+
+- produces table of estimates of the coefficients of the line that is the model 
+- the slope that is associated with the explanatory variable (soil moisture) - the values of which are associated with the differences in plant growth rate 
+
+Superimpose linear model onto plot: 
+```{r linear-model-on-plot-05}
+ggplot(plant_gr,
+       aes(x=soil.moisture.content, y=plant.growth.rate)) +
+  geom_point()+ 
+  geom_smooth(method = 'lm') + #put a linear-model fitted line and the standard error of the fit using flash transparent gray onto graph 
+  ylab("Plant Growth Rate (mm/week)") + 
+  theme_bw()
+```
+
+## Analysis of variance: the one-way ANOVA
+
+- the one-way ANOVA is similiar to the previous example and the two-sample t-test with one key difference: 
+  - the explanatory variable in the one-way ANOVA is a categorical variable (factor)
+- waterflea dataset - we ask:
+  - whether parasites alter waterflea growth rates
+  - whether each of three parasittes reduces growth rates relative to a control in which there was no parasite 
+
+```{r read-daphnia-05}
+urlfile05d="https://raw.githubusercontent.com/apicellap/data/main/Daphniagrowth.csv"
+daphnia<-read.csv(url(urlfile05d))
+glimpse(daphnia)
+```
+
+Plot daphnia data: 
+```{r daphnia-boxplot-05}
+ggplot(daphnia, aes(x = parasite, y=growth.rate)) + 
+  geom_boxplot() +
+  theme_bw() + 
+  coord_flip() #flips the orientation of the graph 90˚ to the right 
+```
+
+- Visualization takeaways: 
+  - There is substantial variation among the parasite groups 
+  - The control group has the highest growth rate 
+  - There is likely to be an overall effect of parasites on growth rate 
+  - There may be an order in the impacts different parasites have on growth rates: P. ramosa < M. bicuspidata < P. perplexa 
+
+Create a model: 
+```{r model-dph-05}
+model_grow <- lm(growth.rate ~ parasite, data = daphnia)
+model_grow
+```
+
+Check the assumptions: 
+```{r assumption-check-dph-05, warning=FALSE}
+autoplot(model_grow, 
+         smooth.colour = NA)
+```
+
+- assumption-checking plots:
+  - The figures suggest that the assumptions are fine 
+  - Even the upper right plot, the Q-Q plot, is within the bounds of expected variation 
+
+Produce anova table for model: 
+```{r anova-table-dph-05}
+anova(model_grow)
+```
+
+- For a one-way anova, the null hypothesis is that all of the groups come from populations with (statistically) the same mean
+  - The F-value quantifies how likely this is to be true 
+    - F value is the ratio between the between group variation: within group variation  
+      - A large F value means that the between group variation is much larger 
+      
+```{r summary-table-dph-05}
+summary(model_grow)
+```
+
+- Output:
+- table of coefficients: 
+  - What is labelled as '(Intercept)' is the control 
+  - R tends to list things in alphabetical order 
+    - Of the levels of the explanatory variable, 'control' is the first alphabetically 
+    - In this context, we can assume that (Intercept) refers to the first level in alphabetical order - control - in this case
+  - Treatment contrasts report the *differences* between the reference level (the control in this case) and the other levels
+    - So -0.41275 is the difference between the control level and the parasiteMetschnikowia bicuspidata level 
+    - In other words, the differences are the distances between the colored diamonds and the dotted black line in figure 6.1 below
+    
+Determine the means for each level: 
+```{r summary-means-dph-05}
+sumDat <- daphnia %>% 
+  group_by(parasite) %>%
+  summarise(meanGR = mean(growth.rate))
+sumDat
+```
+
+Manually determine the difference between control and other levels: 
+```{r manual-difference-05}
+0.8011541	-1.2139088	
+1.0763551 - 1.2139088
+0.4822030 - 1.2139088
+```
+
+```{r means-plot-05, fig.cap="\\label{fig:figs}Daphnia Treatment Differences"}
+ggplot(daphnia, aes(x = parasite, y=growth.rate, color = parasite)) + 
+  geom_point(size =2) + 
+  geom_point(data = sumDat, aes( x = parasite, y = meanGR), shape = 18, size = 5) +
+  geom_hline(yintercept = sumDat$meanGR[1],
+             lwd=1,
+             linetype = 'dotted',
+             colour="black") + 
+  geom_hline(yintercept = sumDat$meanGR[1],
+             lwd=1,
+             linetype = 'dotted',
+             colour="black") + 
+  xlab("")+
+  theme_bw() + 
+  coord_flip() 
+```
+
+  

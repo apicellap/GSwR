@@ -1,0 +1,83 @@
+# Visualizing your data
+
+## The first step in every data analysis - making a picture
+
+```{r install-04, echo=T, message=FALSE, warning=FALSE, results='hide', cache=TRUE}
+install.packages("ggplot2",  repos = "https://cran.us.r-project.org")
+install.packages("dplyr",  repos = "https://cran.us.r-project.org")
+```
+
+```{r load-libs-04, echo=T, message=FALSE, warning=FALSE, results='hide'}
+library(ggplot2)
+library(dplyr)
+```
+
+Read in the data 
+```{r read-data-04}
+urlfile04a="https://raw.githubusercontent.com/apicellap/data/main/compensation.csv"
+compensation<-read.csv(url(urlfile04a))
+```
+
+View dataframe & read the variables + the first few of their observations horizontally: 
+```{r glimpse-04}
+glimpse(compensation) 
+```
+
+## ggplot2: a grammar for graphics 
+
+Create base plot: 
+```{r base-pointplot-04}
+base_plot <-ggplot(compensation, aes(x = Root, y = Fruit, 
+                                colour=Grazing)) + #colour: for the two levels of the categorical variable, Grazing
+  geom_point()                                       
+base_plot
+```
+
+Render background white instead of gray: 
+```{r sp-mod1}
+base_plot + theme_bw()
+```
+
+```{r sp-mod2}
+base_plot + 
+  theme_bw() + 
+  geom_point(
+    size = 5) #alter size of datapoints in scatterplot 
+```
+
+Add x and y axis titles: 
+```{r sp-mod3}
+base_plot + theme_bw() + geom_point(size = 5) + 
+    xlab("Root Biomass") + 
+  ylab("Fruit Production") 
+```
+
+## Box and whisker plots
+```{r base-boxplot-04}
+base_plot2 <- ggplot(compensation, aes(x = Grazing, y = Fruit)) + 
+  geom_boxplot() +  
+  geom_point(
+    size = 4, #size of point
+    colour = 'lightgrey', #color of point
+    alpha = 0.5) +         #transparency of point 
+  xlab("Grazing treatment") + 
+  ylab("Fruit Production") + 
+  theme_bw() 
+base_plot2
+```
+
+## Distributions: making histograms of numeric variables 
+
+```{r histo-04}
+ggplot(compensation, aes(x=Fruit))+
+  geom_histogram(bins=15)  #bins defines how many histogram bins there are 
+ 
+```
+
+```{r histo-04b}
+ggplot(compensation, aes(x=Fruit))+
+  geom_histogram(bins=15) + 
+  facet_wrap(~Grazing) #facet_wrap() allows you to put the plots next to each other, a variable must be specified 
+```
+
+

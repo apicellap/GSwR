@@ -1,0 +1,106 @@
+# Getting Data into R
+
+```{r installation-02, echo=T, message=FALSE, warning=FALSE, results='hide'}
+install.packages("dplyr",repos = "https://cran.us.r-project.org")
+install.packages("tidyr",repos = "https://cran.us.r-project.org")
+install.packages("stringr",repos = "https://cran.us.r-project.org")
+install.packages("lubridate",repos = "https://cran.us.r-project.org")
+install.packages("readr",repos = "https://cran.us.r-project.org")
+```
+
+```{r load-libs-02, echo=T, message=FALSE, warning=FALSE, results='hide'}
+library(dplyr)
+library(tidyr)
+library(stringr)
+library(lubridate)
+library(readr)
+```
+
+
+Read in the data 
+```{r read-data-02}
+urlfile02a="https://raw.githubusercontent.com/apicellap/data/main/compensation.csv"
+compensation<-read.csv(url(urlfile02a))
+head(compensation)
+```
+## Checking that your data are your data
+
+Generate names of the columns/variables in the console: 
+```{r df-names}
+names(compensation)
+```
+
+Produce number of observations (rows in each column) followed by # of variables:
+```{r df-dimensions}
+dim(compensation) 
+```
+
+Review structure of the data: 
+```{r df-structure-02}
+str(compensation)
+```
+
+## Appendix advanced activity: dealing with untidy data
+
+```{r read-data-02b}
+urlfile02b="https://raw.githubusercontent.com/apicellap/data/main/nasty%20format.csv"
+nasty.format<-read.csv(url(urlfile02b))
+head(nasty.format)
+```
+
+Review data structure: 
+```{r df-structure-02b}
+str(nasty.format)
+```
+
+- this dataset is poorly constructed 
+
+Eliminate extra (37th) row in dataset: 
+```{r elim-row}
+nasty.format<-filter(nasty.format, Bottle !="") # '!=' symbol means '≠' 
+tail(nasty.format)
+
+
+```
+
+- this filter function is programmed to capture every row in which variable, 'Bottle', contains text 
+
+Create new variables and assort data into them:  
+```{r gather-data}
+tidy_data <- gather(nasty.format, 
+                    Date, Abundance, #the variables to be created 
+                    4:11) #column headers that are dates in the nasty.format dataframe 
+head(tidy_data)
+
+```
+
+Remove the 'X', which precedes that date in each observation: 
+```{r edit-dates}
+tidy_data <- mutate(tidy_data, Date=substr(Date,2,20))
+head(tidy_data)
+```
+
+Display all unique dates: 
+```{r unique-dates}
+unique(
+  tidy_data$Date) #this says use the observations in the variable 'Date' in the 'tidy_data' dataframe
+```
+
+Reformat the dates to be universally recognized: 
+```{r reformat-dates}
+tidy_data <-mutate(tidy_data, Date=dmy(Date))
+head(tidy_data)
+```
+
+`separate()` Separates information present in one column to multiple new columns 
+
+`unite()` Puts information from several columns into one column 
+
+`rbind()` Puts datasets with exactly the same columns together
+
+`cbind()` Combines two datasets with exactly the same columns together
+
+`full_join()` Joins two datasets with one or more columns in common 
+
+`merge()` Same function as full_join() but from the base package
+

@@ -1,0 +1,123 @@
+# Data Management and Manipulation 
+
+```{r install-03, echo=T, message=FALSE, warning=FALSE, results='hide', cache=TRUE}
+install.packages("dplyr",repos = "https://cran.us.r-project.org")
+install.packages("tidyr",repos = "https://cran.us.r-project.org")
+install.packages("stringr",repos = "https://cran.us.r-project.org")
+install.packages("lubridate",repos = "https://cran.us.r-project.org")
+
+```
+
+```{r load-libs-03, echo=T, message=FALSE, warning=FALSE, results='hide'}
+library(dplyr)
+library(tidyr)
+library(stringr)
+library(lubridate)
+
+```
+
+Read in the data 
+```{r read-data-03}
+urlfile03a="https://raw.githubusercontent.com/apicellap/data/main/compensation.csv"
+compensation<-read.csv(url(urlfile03a))
+head(compensation)
+```
+
+Summarize the data in each variable:
+```{r summary-data-03}
+ summary(compensation)
+```
+
+## Subsetting 
+Create new dataframe comprised of specific variable(s):
+```{r subset-03a}
+head(select(compensation,
+           Fruit))
+```
+
+Select all columns except one: 
+```{r select-03}
+head(select(compensation, -Root))
+```
+
+Create new dataframe comrpised of specific variable(s) *except* 'Root': 
+```{r slice-03}
+head(slice(compensation, 2:10))
+```
+
+Create new dataframe comprised of a list of variables:
+```{r slice-03b}
+head(slice(compensation, c(2,3,10)))
+```
+
+Filter data set to only observations in which this is TRUE: 
+```{r filter-03}
+filter(compensation, Fruit == 80) 
+```
+
+Grab observations when Fruit is not equal to 80: 
+```{r filter-03b}
+head(filter(compensation, Fruit !=80))
+```
+
+Grab any observations in which Fruit is ≤ 80; can also use < symbol for less than:  
+```{r filter-03c}
+head(filter(compensation, Fruit <=80))
+```
+
+Grab any observations in which Fruit is greater than 95 OR less than 15: 
+```{r filter-03d}
+head(filter(compensation, Fruit >95|Fruit<15))
+```
+
+Grab any observations in which Fruit is greater than 50 AND less than 55: 
+```{r filter-03e}
+head(filter(compensation, Fruit >50 & Fruit<55))
+```
+
+Order data by Fruit from lowest to highest observation: 
+```{r arrange-03}
+head(arrange(compensation, Fruit))
+
+```
+
+Create new dataframe that filters observations that have Fruit values above 80 
+and only contains the corresponding Root values: 
+```{r filter-03-special}
+head(select(filter(compensation, Fruit>80), Root))
+```
+
+## Calculating summary statistics about groups of your data 
+
+Perform summary analyses on dataframe: 
+```{r summary-stats-03}
+summarise(
+  group_by(compensation, Grazing), #access the dataframe, target Grazing to be the grouping variable 
+  meanFruit = mean(Fruit)) #creates the object, meanFruit which is the mean of the data in the Fruit variable
+
+```
+
+Additional summary functions and create new dataframe to encompass calculations:
+```{r summary-stats-df-03}
+mean.fruit<-summarise(
+  group_by(compensation, Grazing), 
+  meanFruit = mean(Fruit), sdfruit =sd(Fruit)) #multiple statistics can be calculated within summarise 
+mean.fruit
+```
+
+
+```{r special-func-03}
+x <- sum(with(compensation, Grazing == "Grazed")) #counts number of observations for variable when it = Grazed 
+x
+```
+
+```{r summary-stats-df-03b}
+
+SE.mean.fruit<-summarise(
+  group_by(compensation, Grazing), 
+  meanFruit = mean(Fruit), 
+  SEfruit =(sd(Fruit))/sqrt(x)) #multiple statistics can be calculated within summarise 
+SE.mean.fruit
+
+```
+

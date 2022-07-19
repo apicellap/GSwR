@@ -1,0 +1,31 @@
+# Getting Acqainted with R 
+
+## Using R as a giant calculator 
+
+Produce a sequence of numbers: 
+```{r sequence}
+seq(from = 0,
+    to = 10, 
+    by = 1) #interval 
+```
+
+## Your first script
+
+Creating objects: 
+```{r script-001}
+x<-seq(from = 0, to = 10, by =0.5)
+x
+y<-seq(from = 101, to = 110, by =0.5)
+```
+
+Add the objects together to create a new object: 
+```{r add-objects}
+z <- x + y  
+z
+```
+
+Print the session information: 
+```{r session-info}
+sessionInfo()
+```
+
