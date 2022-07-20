@@ -1,0 +1,1071 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<title>Chapter 7 Getting Started with Generalized Linear Models | A Guide to Getting Started with R</title>
+<meta name="author" content="Pete Apicella">
+<meta name="generator" content="bookdown 0.27 with bs4_book()">
+<meta property="og:title" content="Chapter 7 Getting Started with Generalized Linear Models | A Guide to Getting Started with R">
+<meta property="og:type" content="book">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Chapter 7 Getting Started with Generalized Linear Models | A Guide to Getting Started with R">
+<!-- JS --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://kit.fontawesome.com/6ecbd6c532.js" crossorigin="anonymous"></script><script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<link href="libs/bootstrap-4.6.0/bootstrap.min.css" rel="stylesheet">
+<script src="libs/bootstrap-4.6.0/bootstrap.bundle.min.js"></script><script src="libs/bs3compat-0.3.1/transition.js"></script><script src="libs/bs3compat-0.3.1/tabs.js"></script><script src="libs/bs3compat-0.3.1/bs3compat.js"></script><link href="libs/bs4_book-1.0.0/bs4_book.css" rel="stylesheet">
+<script src="libs/bs4_book-1.0.0/bs4_book.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- CSS --><style type="text/css">
+    
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  </style>
+<link rel="stylesheet" href="style.css">
+<meta name="description" content="Response variables in linear model-based analyses have several common features including that: We assume they are continuous variables that can take negative and positive values and can be...">
+<meta property="og:description" content="Response variables in linear model-based analyses have several common features including that: We assume they are continuous variables that can take negative and positive values and can be...">
+<meta name="twitter:description" content="Response variables in linear model-based analyses have several common features including that: We assume they are continuous variables that can take negative and positive values and can be...">
+</head>
+<body data-spy="scroll" data-target="#toc">
+
+<div class="container-fluid">
+<div class="row">
+  <header class="col-sm-12 col-lg-3 sidebar sidebar-book"><a class="sr-only sr-only-focusable" href="#content">Skip to main content</a>
+
+    <div class="d-flex align-items-start justify-content-between">
+      <h1>
+        <a href="index.html" title="">A Guide to Getting Started with R</a>
+      </h1>
+      <button class="btn btn-outline-primary d-lg-none ml-2 mt-1" type="button" data-toggle="collapse" data-target="#main-nav" aria-expanded="true" aria-controls="main-nav"><i class="fas fa-bars"></i><span class="sr-only">Show table of contents</span></button>
+    </div>
+
+    <div id="main-nav" class="collapse-lg">
+      <form role="search">
+        <input id="search" class="form-control" type="search" placeholder="Search" aria-label="Search">
+</form>
+
+      <nav aria-label="Table of contents"><h2>Table of contents</h2>
+        <ul class="book-toc list-unstyled">
+<li><a class="" href="index.html">About</a></li>
+<li><a class="" href="getting-acqainted-with-r.html"><span class="header-section-number">1</span> Getting Acqainted with R</a></li>
+<li><a class="" href="getting-data-into-r.html"><span class="header-section-number">2</span> Getting Data into R</a></li>
+<li><a class="" href="data-management-and-manipulation.html"><span class="header-section-number">3</span> Data Management and Manipulation</a></li>
+<li><a class="" href="visualizing-your-data.html"><span class="header-section-number">4</span> Visualizing your data</a></li>
+<li><a class="" href="introduction-to-statistics-in-r.html"><span class="header-section-number">5</span> Introduction to Statistics in R</a></li>
+<li><a class="" href="advancing-statistics-in-r.html"><span class="header-section-number">6</span> Advancing Statistics in R</a></li>
+<li><a class="active" href="getting-started-with-generalized-linear-models.html"><span class="header-section-number">7</span> Getting Started with Generalized Linear Models</a></li>
+<li><a class="" href="chapter-8-pimping-your-plots.html"><span class="header-section-number">8</span> Chapter 8: Pimping Your Plots</a></li>
+</ul>
+
+        <div class="book-extra">
+          <p><a id="book-repo" href="https://github.com/rstudio/bookdown-demo">View book source <i class="fab fa-github"></i></a></p>
+        </div>
+      </nav>
+</div>
+  </header><main class="col-sm-12 col-md-9 col-lg-7" id="content"><div id="getting-started-with-generalized-linear-models" class="section level1" number="7">
+<h1>
+<span class="header-section-number">7</span> Getting Started with Generalized Linear Models<a class="anchor" aria-label="anchor" href="#getting-started-with-generalized-linear-models"><i class="fas fa-link"></i></a>
+</h1>
+<ul>
+<li>Response variables in linear model-based analyses have several common features including that:
+<ul>
+<li>We assume they are continuous variables that can take negative and positive values and can be fractions</li>
+<li>We also assume that these data are bounded (but in practice, sometimes they are not)</li>
+<li>The models assume normally distributed residuals</li>
+<li>The model also assumes a constant mean-variance relationship</li>
+</ul>
+</li>
+<li>Often there are response variables in which the normality assumption is violated</li>
+<li>Examples of data that violate assumptions:
+<ul>
+<li>Integer valued data that is bounded and cannot be fractioned or negative (i.e. the number of people)</li>
+<li>Binary data (i.e. presence/absence data)</li>
+</ul>
+</li>
+<li>Historically for these types of data, transformations are employed such as log10 transformations for counts or arcsin(sqrt()) transformations for proportion data</li>
+<li>This is where the generalized linear model (GLM) may be utilized</li>
+</ul>
+<div id="counts-and-proportions-and-the-glm" class="section level3" number="7.0.1">
+<h3>
+<span class="header-section-number">7.0.1</span> Counts and Proportions and the GLM<a class="anchor" aria-label="anchor" href="#counts-and-proportions-and-the-glm"><i class="fas fa-link"></i></a>
+</h3>
+<ul>
+<li>Count data:
+<ul>
+<li>Are bounded by 0 and infinity</li>
+<li>Violate the normality assumption</li>
+<li>Do not have a constant mean-variance relationship</li>
+</ul>
+</li>
+<li>Example:
+<ul>
+<li>How the number of offspring a female may produce over her lifetime relates to body size
+<ul>
+<li>How a rate of occurence of events (births) depends on other variables (body size)</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Proportion data - data are often binary
+<ul>
+<li>flowering data</li>
+<li>animal death</li>
+<li>species sex ratios</li>
+</ul>
+</li>
+<li>These occurences are often related to 1+ explanatory variables</li>
+<li>These data are binomial</li>
+</ul>
+</div>
+<div id="key-terms-of-glm-models" class="section level3" number="7.0.2">
+<h3>
+<span class="header-section-number">7.0.2</span> Key terms of GLM models<a class="anchor" aria-label="anchor" href="#key-terms-of-glm-models"><i class="fas fa-link"></i></a>
+</h3>
+<ul>
+<li>Family
+<ul>
+<li>The probability distribution that is assumed to describe the response variable</li>
+<li>In other words, it’s a mathematical statement of how likely events are</li>
+<li>Poisson and binomial distributions are examples of families</li>
+</ul>
+</li>
+<li>Linear predictor
+<ul>
+<li>This is an equation that describes how the different predictor variables (explanatory variables) affect the expected value of the response variable</li>
+</ul>
+</li>
+<li>Link function
+<ul>
+<li>Describes the mathematical relationship between the expected value of the response variable and the linear predictor, <em>linking</em>, the two aspects of the GLM</li>
+</ul>
+</li>
+<li>
+<code><a href="https://rdrr.io/r/stats/glm.html">glm()</a></code> will be used to create generalized linear models</li>
+</ul>
+</div>
+<div id="counts-and-rates---poisson-glms" class="section level2" number="7.1">
+<h2>
+<span class="header-section-number">7.1</span> Counts and rates - Poisson GLMs<a class="anchor" aria-label="anchor" href="#counts-and-rates---poisson-glms"><i class="fas fa-link"></i></a>
+</h2>
+<div id="counting-sheep---the-data-and-question" class="section level3" number="7.1.1">
+<h3>
+<span class="header-section-number">7.1.1</span> Counting Sheep - the data and question<a class="anchor" aria-label="anchor" href="#counting-sheep---the-data-and-question"><i class="fas fa-link"></i></a>
+</h3>
+<ul>
+<li>In this dataset, the response variable is a count variable</li>
+<li>We aim to understand how the rate of occurence of events depends on 1 or more explanatory variables</li>
+<li>Dataset backstory:
+<ul>
+<li>It’s about a specific population of sheep</li>
+<li>These sheep are on an island off the west coast of Scotland</li>
+<li>They are unmanaged/feral population of Soay sheep</li>
+<li>There has been a lot of scientific interest on this population to study how the population is evolving</li>
+<li>Several studies have been done on female (ewe) fitness
+<ul>
+<li>One way to measure fitness is to count the total number of offspring born to a female during her life - ‘lifetime reproductive success’
+<ul>
+<li>response variable = counts of offspring, which are poorly approximated by a normal distribution</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>question: Does lifetime reproductive success increase with ewe bodymass?
+<ul>
+<li>Do larger ewes produce more offspring?</li>
+<li>If so, then is there a heritable difference in body mass - is there selection pressure on this trait?</li>
+</ul>
+</li>
+</ul>
+<div class="sourceCode" id="cb199"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span><span class="op">(</span><span class="st">"ggplot2"</span>,  repos <span class="op">=</span> <span class="st">"https://cran.us.r-project.org"</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span><span class="op">(</span><span class="st">"dplyr"</span>,  repos <span class="op">=</span> <span class="st">"https://cran.us.r-project.org"</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span><span class="op">(</span><span class="st">"ggfortify"</span>,  repos <span class="op">=</span> <span class="st">"https://cran.us.r-project.org"</span><span class="op">)</span></code></pre></div>
+<div class="sourceCode" id="cb200"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org">ggplot2</a></span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org">dplyr</a></span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/sinhrks/ggfortify">ggfortify</a></span><span class="op">)</span></code></pre></div>
+<div class="sourceCode" id="cb201"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">urlfile07a</span><span class="op">=</span><span class="st">"https://raw.githubusercontent.com/apicellap/data/main/SoaySheepFitness.csv"</span>
+<span class="va">soay</span><span class="op">&lt;-</span><span class="fu"><a href="https://rdrr.io/r/utils/read.table.html">read.csv</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/connections.html">url</a></span><span class="op">(</span><span class="va">urlfile07a</span><span class="op">)</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/utils/str.html">str</a></span><span class="op">(</span><span class="va">soay</span><span class="op">)</span></code></pre></div>
+<pre><code>## 'data.frame':    50 obs. of  2 variables:
+##  $ fitness  : int  4 3 2 14 5 2 2 5 8 4 ...
+##  $ body.size: num  6.37 7.18 6.16 8.6 7.33 ...</code></pre>
+<p>Visualize the data:</p>
+<div class="sourceCode" id="cb203"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="va">soay</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">body.size</span>, y <span class="op">=</span> <span class="va">fitness</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> 
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html">geom_point</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> 
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_smooth.html">geom_smooth</a></span><span class="op">(</span>method <span class="op">=</span> <span class="st">"lm"</span>, se <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> <span class="op">+</span> <span class="co">#applies linear regression (blue) line </span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_smooth.html">geom_smooth</a></span><span class="op">(</span>span <span class="op">=</span> <span class="fl">1</span>,                    <span class="co">#determines how wiggly the curve is </span>
+              colour <span class="op">=</span> <span class="st">"red"</span>, se <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> <span class="op">+</span> <span class="co">#applies a non-linear and more  flexible statistical model  </span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">xlab</a></span><span class="op">(</span><span class="st">"Body mass (kg)"</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">ylab</a></span><span class="op">(</span><span class="st">"Lifetime fitness"</span><span class="op">)</span></code></pre></div>
+<pre><code>## `geom_smooth()` using formula 'y ~ x'</code></pre>
+<pre><code>## `geom_smooth()` using method = 'loess' and formula 'y ~ x'</code></pre>
+<div class="inline-figure"><img src="_main_files/figure-html/viz-data-07-1.png" width="672"></div>
+<ul>
+<li>Based on the loose fitting models, there is a strong positive relationship between fitness and body size in which larger ewes have more offspring over time
+<ul>
+<li>Larger ewes have more resources to allocate to reproduction</li>
+</ul>
+</li>
+<li>The red line clearly captures the relationship more effectively than the blue one</li>
+<li>The upward trending of the red line is an issue of non-linearity</li>
+<li>There are also subtler issues with the data</li>
+<li>To really understand these problems, the authors want to analyze the data the incorrect way and then right the wrongs with the correct analysis after</li>
+</ul>
+</div>
+</div>
+<div id="doing-it-wrong" class="section level2" number="7.2">
+<h2>
+<span class="header-section-number">7.2</span> Doing it wrong<a class="anchor" aria-label="anchor" href="#doing-it-wrong"><i class="fas fa-link"></i></a>
+</h2>
+<p>Create an inappropriate model using the linear model approach:</p>
+<div class="sourceCode" id="cb206"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">soay.mod</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span><span class="op">(</span><span class="va">fitness</span> <span class="op">~</span> <span class="va">body.size</span>, data <span class="op">=</span> <span class="va">soay</span><span class="op">)</span>
+<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/autoplot.html">autoplot</a></span><span class="op">(</span><span class="va">soay.mod</span>, smooth.colour <span class="op">=</span> <span class="cn">NA</span><span class="op">)</span> </code></pre></div>
+<div class="inline-figure"><img src="_main_files/figure-html/wrong-model-1.png" width="672"></div>
+<ul>
+<li>Almost all of our assumptions are violated</li>
+</ul>
+<div id="doing-it-wrong-diagnosing-the-problems" class="section level3" number="7.2.1">
+<h3>
+<span class="header-section-number">7.2.1</span> Doing it wrong: diagnosing the problems<a class="anchor" aria-label="anchor" href="#doing-it-wrong-diagnosing-the-problems"><i class="fas fa-link"></i></a>
+</h3>
+<ul>
+<li>
+<strong>Residuals vs fitted values (upper left)</strong>:
+<ul>
+<li>Suggests that the systematic part of the model is inappropriate because there is a pattern of the datapoints
+<ul>
+<li>In fact, the U-shape of the data indicate that the straight-line model fails to account for the curvature in the relationship between our two variables</li>
+</ul>
+</li>
+<li>Fitness is underestimated at small body sizes</li>
+<li>Fitness is overestimated at larger body sizes</li>
+</ul>
+</li>
+<li>
+<strong>Normal Q-Q plot (upper right)</strong>:
+<ul>
+<li>Most of the points should be on the dashed diagnonal line and they are not
+<ul>
+<li>Many of the points in positive territory are above the line</li>
+<li>Many of the points in negative territory are below the line</li>
+</ul>
+</li>
+<li>We see this pattern because the distribution of residuals is not symmetrical
+<ul>
+<li>In this case, it is skewed to the right</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p>Visualize rightward skew through a histogram:</p>
+<div class="sourceCode" id="cb207"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="va">soay</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>x<span class="op">=</span><span class="va">body.size</span><span class="op">)</span><span class="op">)</span><span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_histogram.html">geom_histogram</a></span><span class="op">(</span>bins<span class="op">=</span><span class="fl">20</span><span class="op">)</span></code></pre></div>
+<div class="inline-figure"><img src="_main_files/figure-html/skew-histogram-1.png" width="672"></div>
+<ul>
+<li>
+<strong>Scale location plot (bottom left)</strong>:
+<ul>
+<li>There is a clear pattern that shows a positive relationship between the absolute size of the residuals and the fitted values
+<ul>
+<li>This reflects the way the fitness values are scattered around the red line: there is more vertical spread in the data at larger fitness values</li>
+<li>Based on this, we can say that there is a positive mean-variance relationship in the data</li>
+<li>In other words, large predicted fitness values are associated with more variation in the residuals</li>
+<li>This is typical of count data</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<strong>Residuals-leverage plot (bottom right)</strong>:
+<ul>
+<li>This plot is not too bad</li>
+<li>There are no extreme standardized residual values
+<ul>
+<li>No obvious outliers</li>
+</ul>
+</li>
+<li>None of the observations are having an outsized effect on the model</li>
+</ul>
+</li>
+</ul>
+<p><strong>Overall, the normal linear regression is not doing a good job of describing the data</strong></p>
+</div>
+<div id="the-poisson-distribution---a-solution" class="section level3" number="7.2.2">
+<h3>
+<span class="header-section-number">7.2.2</span> The Poisson distribution - a solution<a class="anchor" aria-label="anchor" href="#the-poisson-distribution---a-solution"><i class="fas fa-link"></i></a>
+</h3>
+<ul>
+<li>The normality assumption built into the linear regression model is not appropriate for these data - Properties of a normal distribution:
+<ul>
+<li>Concerns continuous variables (can assume fractional values)
+<ul>
+<li>Count data are discete (i.e. a ewe can produce 0,1,2, etc. lambs)</li>
+</ul>
+</li>
+<li>Normal distribution allows for negative values
+<ul>
+<li>Count data must be positive (i.e. ewe cannot have -2 offspring)</li>
+</ul>
+</li>
+<li>Symmetry.
+<ul>
+<li>Count data often are asymmetrical</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Poisson distribution is a good starting point for the analysis of certain forms of count data</li>
+</ul>
+<div class="inline-figure">A visual for understanding the Poisson distribution:
+<img src="poisson.png" width="90%">
+</div>
+<ul>
+<li>The above figure displays three Poisson distributions and each has a different mean</li>
+<li>The x-axis has a range of different possible values and the y axis has the probability of each value</li>
+<li>Reasons why the poisson distribution is a good model for the Soay data:
+<ul>
+<li>Only discete counts are possible</li>
+<li>Data are bounded at 0</li>
+<li>Very large counts are possible and in the scope of the model; however, their occurence is unlikely</li>
+<li>Variance of the distribution increases as the mean of distribution is increased
+<ul>
+<li>This corresponds to the widening of the base the distribution with a higher mean</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>The poisson distribution is best equipped for <em>unbounded</em> count data
+<ul>
+<li>What unbounded here refers to is just that there is no uppper limit to the values that the count variable may take</li>
+<li>There are obvious biological constraints, but we don’t actually know the limit</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div id="doing-it-right---the-poisson-glm" class="section level2" number="7.3">
+<h2>
+<span class="header-section-number">7.3</span> Doing it right - the Poisson GLM<a class="anchor" aria-label="anchor" href="#doing-it-right---the-poisson-glm"><i class="fas fa-link"></i></a>
+</h2>
+<div id="anatomy-of-a-glm" class="section level3" number="7.3.1">
+<h3>
+<span class="header-section-number">7.3.1</span> Anatomy of a GLM<a class="anchor" aria-label="anchor" href="#anatomy-of-a-glm"><i class="fas fa-link"></i></a>
+</h3>
+<ul>
+<li><p>GLM is comprised of three key terms: family, linear predictor, the link function</p></li>
+<li>
+<p><strong>family</strong>:</p>
+<ul>
+<li>This is the error aspect of the GLM</li>
+<li>Determines what kind of distribution is used to describe the response variable. Options:
+<ul>
+<li>Poisson distribution</li>
+<li>Binomial distribution</li>
+<li>Gamma distribution (positive valued, continuous variables)</li>
+<li>Other exotic versions</li>
+</ul>
+</li>
+<li>Each option is appropriate for specific types of data</li>
+</ul>
+</li>
+<li>
+<p><strong>linear predictor</strong>:</p>
+<ul>
+<li>Every time a model is built with the <code><a href="https://rdrr.io/r/stats/lm.html">lm()</a></code> function, some data and an R formula must be supplied to define the model</li>
+<li>The R formula defines the linear predictor</li>
+<li>Soay example:
+<ul>
+<li>inappropriate regression with model: lm(fitness ~ body.size, data = soay)</li>
+<li>This tells R to build a model for the predicted fitness given an intercept and body size slope term: Predicted fitness = Intercept + Slope x Body size</li>
+<li>The linear predictor is ‘Intercept + Slope x Body size’
+<ul>
+<li>so it’s basically just the model</li>
+</ul>
+</li>
+<li>Coefficients shown by <code>summary(soay.mod)</code> are just the intercepts and slopes of th linear predictor</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p><strong>The link function</strong>:</p>
+<ul>
+<li>A model that cannot make impossible predictions is preferred
+<ul>
+<li>You can plug numbers into the formul that will produce illogical outputs such that:
+<ul>
+<li>A negative number of offspring in this sheep example</li>
+</ul>
+</li>
+<li>With the GLM, instead of trying to model the predicted values of the response variable directly, we model a mathematical transformation of the prediction
+<ul>
+<li>The transformation is the link function</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Using a Poisson GLM to model the fitness vs body mass relationship, the model for the predicted fitness would look like this:
+<ul>
+<li>Log[Predicted fitness] = Intercept + Slope x Body size
+<ul>
+<li>This is a natural log in this case</li>
+<li>The link function in a standard Poisson GLM is always natural log</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Instead of the linear predictor describing fitness directly, it relates the natural logarithm of predicted fitness to body size
+<ul>
+<li>This must be positive, but the log transformed value can take any value</li>
+</ul>
+</li>
+<li>Solve for predicted fitness to get:</li>
+<li>Predicted fitness = e^{Intercept + Slope x Body size}</li>
+</ul>
+</li>
+<li>
+<p>A Poisson GLM for the Soays sheep implies an exponential relationship between fitness and body mass</p>
+<ul>
+<li>linear model does not mean a linear relationship</li>
+</ul>
+</li>
+<li>
+<p>The link function allows for the estimation of the paramenteres of a linear predictor that is apporpriate for the data</p>
+<ul>
+<li>This is accomplished by transforming the response ‘scale’ to the scale of the linear predictor, which in this case a natural log scale, which is defined by the link function</li>
+<li>This is can be visualized in the following figure:</li>
+</ul>
+</li>
+</ul>
+<div class="inline-figure"><img src="linkfunc.png" width="90%"></div>
+<ul>
+<li>Figure:
+<ul>
+<li>Count data is bounded by 0 and positive infinity
+<ul>
+<li>Predicted values must be greater than 0 to be valid for count data</li>
+</ul>
+</li>
+<li>But, to do effective statistics, we need to operate on a scale that is unbounded</li>
+<li>Using the link function accomplishes this</li>
+<li>It moves us from the positive numbers (predicted average counts) scale to the whole number line (the linear predictor) scale</li>
+</ul>
+</li>
+</ul>
+</div>
+<div id="doing-it-right---actually-fitting-the-model" class="section level3" number="7.3.2">
+<h3>
+<span class="header-section-number">7.3.2</span> Doing it right - actually fitting the model<a class="anchor" aria-label="anchor" href="#doing-it-right---actually-fitting-the-model"><i class="fas fa-link"></i></a>
+</h3>
+<p>Build the GLM:</p>
+<div class="sourceCode" id="cb208"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">soay.glm</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/glm.html">glm</a></span><span class="op">(</span><span class="va">fitness</span> <span class="op">~</span> <span class="va">body.size</span>, data <span class="op">=</span> <span class="va">soay</span>, 
+                family <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/family.html">poisson</a></span><span class="op">(</span>
+                  link <span class="op">=</span> <span class="va">log</span><span class="op">)</span><span class="op">)</span> <span class="co">#this line is unnecessary because the log link function is the default for poisson glm </span></code></pre></div>
+</div>
+<div id="doing-it-right---the-diagnostics" class="section level3" number="7.3.3">
+<h3>
+<span class="header-section-number">7.3.3</span> Doing it right - the diagnostics<a class="anchor" aria-label="anchor" href="#doing-it-right---the-diagnostics"><i class="fas fa-link"></i></a>
+</h3>
+<div class="sourceCode" id="cb209"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/autoplot.html">autoplot</a></span><span class="op">(</span><span class="va">soay.glm</span>, smooth.colour <span class="op">=</span> <span class="cn">NA</span><span class="op">)</span> </code></pre></div>
+<div class="inline-figure"><img src="_main_files/figure-html/glm-diagnostics-07-1.png" width="672"></div>
+<ul>
+<li>Overall, the diagnostics look much better
+<ul>
+<li>
+<strong>Residuals vs fitted values (upper left)</strong>:
+<ul>
+<li>The systematic aspect of the model is fairly appropriate
+<ul>
+<li>There is no clear pattern in the relationship apart from a very slight upward trend</li>
+<li>Not enough to be concerned with though</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<strong>Normal Q-Q plot (upper right)</strong>:
+<ul>
+<li>There is some departure from the dashed diagnonal line, but a perfect plot is not expected</li>
+<li>Confirms that the distributional assumptions are okay</li>
+</ul>
+</li>
+<li>
+<strong>Scale location plot (bottom left)</strong>:
+<ul>
+<li>There is a slight positve relationship between the size of the residuals and the fitted values, but not too much of a concern</li>
+</ul>
+</li>
+<li>
+<strong>Residuals-leverage plot (bottom right)</strong>:
+<ul>
+<li>Shows no evidence that there are outliers or points having an outsized effect on the model</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Keep in mind that when R does diagnostics for a GLM, it uses standardized deviance residuals
+<ul>
+<li>This is a transformed version of raw residuals that make transformed residuals normally distributed if the GLM family that is being used is appropriate</li>
+<li>This means that if the chosen family is appropriate for the data, then the diagnostics should show that the residuals are normally distributed</li>
+<li>And the diagnostic plots can be evaluated in the same way as for a linear model because the tests are doing all the same jobs</li>
+</ul>
+</li>
+</ul>
+</div>
+<div id="doing-it-right---anova-and-summary" class="section level3" number="7.3.4">
+<h3>
+<span class="header-section-number">7.3.4</span> Doing it right - <code>anova()</code> and <code>summary()</code><a class="anchor" aria-label="anchor" href="#doing-it-right---anova-and-summary"><i class="fas fa-link"></i></a>
+</h3>
+<ul>
+<li>Thus far it looks that fitnesss is positively related to body mass</li>
+<li>The next step is to test hypotheses</li>
+</ul>
+<p>Create Analysis of <strong>Deviance</strong> table for the GLM:</p>
+<div class="sourceCode" id="cb210"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/stats/anova.html">anova</a></span><span class="op">(</span><span class="va">soay.glm</span><span class="op">)</span></code></pre></div>
+<pre><code>## Analysis of Deviance Table
+## 
+## Model: poisson, link: log
+## 
+## Response: fitness
+## 
+## Terms added sequentially (first to last)
+## 
+## 
+##           Df Deviance Resid. Df Resid. Dev
+## NULL                         49     85.081
+## body.size  1   37.041        48     48.040</code></pre>
+<ul>
+<li>“Deviance” here is closely related to the idea of likelihood, which is a general tool for doing statistics
+<ul>
+<li>Short explanation of likelihood: provides us with a measure of how probable the data would be if they had really been produced by that model
+<ul>
+<li>Using likelihood, you can find a set of best-fitting model coefficients by picking values that maximize likelihood</li>
+<li>Also, sum of squares and mean squares allow for the comparison of different models when normality is assumed</li>
+<li>Likelihood (and deviance) do the same thing for GLMs</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>no p values in this table
+<ul>
+<li>Total deviance for NULL (fitness) is 85.081 and body.size explains 37.041 units of the deviance - So bodysize accounts for almost half of the deviance. This is very large.<br>
+</li>
+<li>There is no p value because R wants the type of test to calculate it to be specified</li>
+</ul>
+</li>
+<li>p values in the GLM involve a <span class="math inline">\(\chi\)</span><span class="math inline">\(^{2}\)</span> distribution rather than an F-distribution (this does not mean that a <span class="math inline">\(\chi\)</span><span class="math inline">\(^{2}\)</span> test is to be performed)</li>
+</ul>
+<p>Specifiy the type of test:</p>
+<div class="sourceCode" id="cb212"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/stats/anova.html">anova</a></span><span class="op">(</span><span class="va">soay.glm</span>, test <span class="op">=</span> <span class="st">"Chisq"</span><span class="op">)</span></code></pre></div>
+<pre><code>## Analysis of Deviance Table
+## 
+## Model: poisson, link: log
+## 
+## Response: fitness
+## 
+## Terms added sequentially (first to last)
+## 
+## 
+##           Df Deviance Resid. Df Resid. Dev  Pr(&gt;Chi)    
+## NULL                         49     85.081              
+## body.size  1   37.041        48     48.040 1.157e-09 ***
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
+<ul>
+<li>The test statistic has a value of 37.041
+<ul>
+<li>The corresponding p value is very small</li>
+<li>This is unsurprising given the strong relationship visualized in the scatterplot</li>
+<li>This is a likelihood ratio test</li>
+</ul>
+</li>
+<li>This means that fitness does vary positively with body size and there is selection pressure on higher body mass</li>
+</ul>
+<p>Find out more about the model:</p>
+<div class="sourceCode" id="cb214"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">soay.glm</span><span class="op">)</span></code></pre></div>
+<pre><code>## 
+## Call:
+## glm(formula = fitness ~ body.size, family = poisson(link = log), 
+##     data = soay)
+## 
+## Deviance Residuals: 
+##     Min       1Q   Median       3Q      Max  
+## -2.7634  -0.6275   0.1142   0.5370   1.9578  
+## 
+## Coefficients:
+##             Estimate Std. Error z value Pr(&gt;|z|)    
+## (Intercept) -2.42203    0.69432  -3.488 0.000486 ***
+## body.size    0.54087    0.09316   5.806 6.41e-09 ***
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## (Dispersion parameter for poisson family taken to be 1)
+## 
+##     Null deviance: 85.081  on 49  degrees of freedom
+## Residual deviance: 48.040  on 48  degrees of freedom
+## AIC: 210.85
+## 
+## Number of Fisher Scoring iterations: 4</code></pre>
+<ul>
+<li>Table output:
+<ul>
+<li>First chunk is self explanatory</li>
+<li>Second chunk - “useless” summary of specially scaled (deviance) residuals</li>
+<li>Third chunk - coefficients
+<ul>
+<li>model is a line so there are only two coefficients - the intercept and a slope</li>
+<li>Each coefficient has a standard error to tell us how precise it is and a z-value to help us determine if the estimate is significantly different from 0 and the associated p value</li>
+</ul>
+</li>
+<li>Fourth chunk - dispersion parameter - <em>more on this later</em>
+</li>
+<li>Fifth chunk - summaries of the null deviance, residual deviance, and their dfs
+<ul>
+<li>null deviance - measure of all the ‘variation’ in the data</li>
+<li>residual deviance - measure of what is left over after fitting the model
+<ul>
+<li>The bigger the difference in these two values, the more variation is explained by the model</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>AIC = Akaike information criterion (not analyzed in this text)</li>
+<li>Number of Fisher Scoring iterations - not important</li>
+</ul>
+</li>
+<li>Upon looking at the original scatterplot that helped visualize the data and this summary table, it might be confusing to see that the intercept has a negative value
+<ul>
+<li>But remember that the link function is being used to predict the natural logarithm of lifetime fitness, not actual fitness</li>
+</ul>
+</li>
+<li>We will revisit the overdispersion concept later in the chapter</li>
+</ul>
+</div>
+<div id="making-a-beautiful-graph" class="section level3" number="7.3.5">
+<h3>
+<span class="header-section-number">7.3.5</span> Making a beautiful graph<a class="anchor" aria-label="anchor" href="#making-a-beautiful-graph"><i class="fas fa-link"></i></a>
+</h3>
+<ul>
+<li>Need to generate a set of new x values</li>
+</ul>
+<p>Generate new x values:</p>
+<div class="sourceCode" id="cb216"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">min.size</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html">min</a></span><span class="op">(</span><span class="va">soay</span><span class="op">$</span><span class="va">body.size</span><span class="op">)</span>
+<span class="va">max.size</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html">max</a></span><span class="op">(</span><span class="va">soay</span><span class="op">$</span><span class="va">body.size</span><span class="op">)</span>
+
+<span class="va">new.x</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/expand.grid.html">expand.grid</a></span><span class="op">(</span>body.size <span class="op">=</span> 
+                      <span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq</a></span><span class="op">(</span><span class="va">min.size</span>, <span class="va">max.size</span>, <span class="co">#the new x values will be between these two parameters </span>
+                          length <span class="op">=</span> <span class="fl">1000</span><span class="op">)</span><span class="op">)</span> <span class="co">#R generates 1000 values between </span></code></pre></div>
+<ul>
+<li>Now the <code><a href="https://rdrr.io/r/stats/predict.html">predict()</a></code> function can be used:
+<ul>
+<li>
+<code><a href="https://rdrr.io/r/stats/predict.html">predict()</a></code> is given three arguments: the GLM model, a value for newdata, and a request for standard errors</li>
+<li>Side note: <code><a href="https://rdrr.io/r/stats/predict.html">predict()</a></code> for glm does not have a confidence interval argument, so they have to be manually rendered into the dataframe</li>
+</ul>
+</li>
+</ul>
+<div class="sourceCode" id="cb217"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">new.y</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/predict.html">predict</a></span><span class="op">(</span><span class="va">soay.glm</span>, 
+                 newdata <span class="op">=</span> <span class="va">new.x</span>, <span class="co">#instructs R to use the new x values </span>
+                 se.fit <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="co">#provides standard errors.predict() for glm() doesn't have an interval = confidence argument</span>
+<span class="va">new.y</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span><span class="va">new.y</span><span class="op">)</span> <span class="co">#converts new.y into a dataframe </span>
+<span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">new.y</span><span class="op">)</span></code></pre></div>
+<pre><code>##         fit    se.fit residual.scale
+## 1 0.1661991 0.2541777              1
+## 2 0.1682619 0.2538348              1
+## 3 0.1703247 0.2534919              1
+## 4 0.1723874 0.2531491              1
+## 5 0.1744502 0.2528063              1
+## 6 0.1765130 0.2524635              1</code></pre>
+<p>Combine new x values with new y values:</p>
+<div class="sourceCode" id="cb219"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">addThese</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span><span class="va">new.x</span>, <span class="va">new.y</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/base/names.html">names</a></span><span class="op">(</span><span class="va">addThese</span><span class="op">)</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/names.html">names</a></span><span class="op">(</span><span class="va">addThese</span><span class="op">)</span> <span class="op">==</span> <span class="st">'fit'</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="st">'fitness'</span> <span class="co">#this will match the original data </span>
+
+<span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">addThese</span><span class="op">)</span></code></pre></div>
+<pre><code>##   body.size   fitness    se.fit residual.scale
+## 1  4.785300 0.1661991 0.2541777              1
+## 2  4.789114 0.1682619 0.2538348              1
+## 3  4.792928 0.1703247 0.2534919              1
+## 4  4.796741 0.1723874 0.2531491              1
+## 5  4.800555 0.1744502 0.2528063              1
+## 6  4.804369 0.1765130 0.2524635              1</code></pre>
+<p>Calculate and include the confidence intervals in the dataframe:</p>
+<div class="sourceCode" id="cb221"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">addThese</span> <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span><span class="va">addThese</span>, 
+                  lwr <span class="op">=</span> <span class="va">fitness</span> <span class="op">-</span><span class="fl">1.96</span> <span class="op">*</span> <span class="va">se.fit</span>, <span class="co">#this and the line below add the lower and upper bounds of the 95% CI </span>
+                  upr <span class="op">=</span> <span class="va">fitness</span> <span class="op">+</span><span class="fl">1.96</span> <span class="op">*</span> <span class="va">se.fit</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">addThese</span><span class="op">)</span></code></pre></div>
+<pre><code>##   body.size   fitness    se.fit residual.scale        lwr       upr
+## 1  4.785300 0.1661991 0.2541777              1 -0.3319891 0.6643874
+## 2  4.789114 0.1682619 0.2538348              1 -0.3292543 0.6657781
+## 3  4.792928 0.1703247 0.2534919              1 -0.3265195 0.6671689
+## 4  4.796741 0.1723874 0.2531491              1 -0.3237848 0.6685597
+## 5  4.800555 0.1744502 0.2528063              1 -0.3210501 0.6699506
+## 6  4.804369 0.1765130 0.2524635              1 -0.3183156 0.6713415</code></pre>
+<p>Visualize the data with our new model + predicted values:</p>
+<div class="sourceCode" id="cb223"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="va">soay</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">body.size</span>, y <span class="op">=</span> <span class="va">fitness</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> 
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html">geom_point</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fl">3</span>, alpha <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span> <span class="op">+</span> 
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_smooth.html">geom_smooth</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">addThese</span>, 
+              <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>ymin <span class="op">=</span> <span class="va">lwr</span>, ymax <span class="op">=</span> <span class="va">upr</span><span class="op">)</span>, stat <span class="op">=</span> <span class="st">'identity'</span><span class="op">)</span> <span class="op">+</span> 
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html">theme_bw</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
+<div class="inline-figure"><img src="_main_files/figure-html/erroneous-plot-1.png" width="672"></div>
+<p>it didn’t work:</p>
+<ul>
+<li>What happened is that the default scale for <code><a href="https://rdrr.io/r/stats/predict.html">predict()</a></code> is just the scale of the link function</li>
+<li>The link function uses a logarithmic scale
+<ul>
+<li>This means that the predictions are the log of the expected fitness, but we want to plot the actual fitness values</li>
+</ul>
+</li>
+<li>To fix this, the inverse log must be applied to any y-axis variables in addThese
+<ul>
+<li>To inverse log, we just have to exponentiate them</li>
+</ul>
+</li>
+</ul>
+<p>Recreate the y values:</p>
+<div class="sourceCode" id="cb224"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">min.size</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html">min</a></span><span class="op">(</span><span class="va">soay</span><span class="op">$</span><span class="va">body.size</span><span class="op">)</span>
+<span class="va">max.size</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html">max</a></span><span class="op">(</span><span class="va">soay</span><span class="op">$</span><span class="va">body.size</span><span class="op">)</span>
+
+<span class="va">new.x</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/expand.grid.html">expand.grid</a></span><span class="op">(</span>body.size <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq</a></span><span class="op">(</span><span class="va">min.size</span>, <span class="va">max.size</span>, length <span class="op">=</span> <span class="fl">1000</span><span class="op">)</span><span class="op">)</span> 
+
+<span class="va">new.y</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/predict.html">predict</a></span><span class="op">(</span><span class="va">soay.glm</span>, 
+                 newdata <span class="op">=</span> <span class="va">new.x</span>, 
+                 se.fit <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>  
+<span class="va">new.y</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span><span class="va">new.y</span><span class="op">)</span> 
+<span class="va">addThese</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span><span class="va">new.x</span>, <span class="va">new.y</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">addThese</span><span class="op">)</span></code></pre></div>
+<pre><code>##   body.size       fit    se.fit residual.scale
+## 1  4.785300 0.1661991 0.2541777              1
+## 2  4.789114 0.1682619 0.2538348              1
+## 3  4.792928 0.1703247 0.2534919              1
+## 4  4.796741 0.1723874 0.2531491              1
+## 5  4.800555 0.1744502 0.2528063              1
+## 6  4.804369 0.1765130 0.2524635              1</code></pre>
+<p>Exponentiate the y values:</p>
+<div class="sourceCode" id="cb226"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">addThese</span> <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span><span class="va">addThese</span>, 
+                  fitness <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Log.html">exp</a></span><span class="op">(</span><span class="va">fit</span><span class="op">)</span>,
+                  lwr <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Log.html">exp</a></span><span class="op">(</span><span class="va">fit</span> <span class="op">-</span> <span class="fl">1.96</span> <span class="op">*</span><span class="va">se.fit</span><span class="op">)</span>, 
+                  upr <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Log.html">exp</a></span><span class="op">(</span><span class="va">fit</span> <span class="op">-</span> <span class="fl">1.96</span><span class="op">*</span><span class="va">se.fit</span><span class="op">)</span><span class="op">)</span> 
+<span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">addThese</span><span class="op">)</span></code></pre></div>
+<pre><code>##   body.size       fit    se.fit residual.scale  fitness       lwr       upr
+## 1  4.785300 0.1661991 0.2541777              1 1.180808 0.7174951 0.7174951
+## 2  4.789114 0.1682619 0.2538348              1 1.183246 0.7194600 0.7194600
+## 3  4.792928 0.1703247 0.2534919              1 1.185690 0.7214303 0.7214303
+## 4  4.796741 0.1723874 0.2531491              1 1.188138 0.7234059 0.7234059
+## 5  4.800555 0.1744502 0.2528063              1 1.190591 0.7253869 0.7253869
+## 6  4.804369 0.1765130 0.2524635              1 1.193050 0.7273732 0.7273732</code></pre>
+<p>Revisulize the data:</p>
+<div class="sourceCode" id="cb228"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="va">soay</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">body.size</span>, y <span class="op">=</span> <span class="va">fitness</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> 
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html">geom_point</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fl">3</span>, alpha <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span> <span class="op">+</span> 
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_smooth.html">geom_smooth</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">addThese</span>, 
+              <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>ymin <span class="op">=</span> <span class="va">lwr</span>, ymax <span class="op">=</span> <span class="va">upr</span><span class="op">)</span>, stat <span class="op">=</span> <span class="st">'identity'</span><span class="op">)</span> <span class="op">+</span> 
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html">theme_bw</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
+<div class="inline-figure"><img src="_main_files/figure-html/final-plot-1.png" width="672"></div>
+</div>
+</div>
+<div id="when-a-poisson-glm-isnt-good-for-counts" class="section level2" number="7.4">
+<h2>
+<span class="header-section-number">7.4</span> When a Poisson GLM isn’t good for counts<a class="anchor" aria-label="anchor" href="#when-a-poisson-glm-isnt-good-for-counts"><i class="fas fa-link"></i></a>
+</h2>
+<ul>
+<li>The previous data set was the best case scenario for a GLM and the simplest use case</li>
+<li>Now we will work with more realistic data</li>
+</ul>
+<div id="overdispersion" class="section level3" number="7.4.1">
+<h3>
+<span class="header-section-number">7.4.1</span> Overdispersion<a class="anchor" aria-label="anchor" href="#overdispersion"><i class="fas fa-link"></i></a>
+</h3>
+<ul>
+<li>Overdispersion means ‘extra variation’</li>
+<li>GLMs make strong assumptions about the nature of variability in the data
+<ul>
+<li>We have seen how the variance increases with the mean</li>
+<li>For a Poisson distribution, the variance is equal to the mean
+<ul>
+<li>This assumption can only be true if you can account for every source of variation in the data (big assumption esp in biology)</li>
+</ul>
+</li>
+<li>But Biology creates variation that cannot be measured or accounted for</li>
+<li>This is the source of the overdisperson problem
+<ul>
+<li>From non-independence in the data
+<ul>
+<li>Non-independence refers to the idea that some elements in the data are more similiar to one another than they are to other things</li>
+<li>i.e. cannabis plants in experiment are more similiar to each other than a random plant</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>overdispersion sounds like BS but it can really mess up statistical output if it is ignored (i.e. p-values) and end up with false positives</li>
+<li>What to do about it?
+<ul>
+<li>First: detect it.</li>
+</ul>
+</li>
+</ul>
+<div class="sourceCode" id="cb229"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">soay.glm</span><span class="op">)</span></code></pre></div>
+<pre><code>## 
+## Call:
+## glm(formula = fitness ~ body.size, family = poisson(link = log), 
+##     data = soay)
+## 
+## Deviance Residuals: 
+##     Min       1Q   Median       3Q      Max  
+## -2.7634  -0.6275   0.1142   0.5370   1.9578  
+## 
+## Coefficients:
+##             Estimate Std. Error z value Pr(&gt;|z|)    
+## (Intercept) -2.42203    0.69432  -3.488 0.000486 ***
+## body.size    0.54087    0.09316   5.806 6.41e-09 ***
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## (Dispersion parameter for poisson family taken to be 1)
+## 
+##     Null deviance: 85.081  on 49  degrees of freedom
+## Residual deviance: 48.040  on 48  degrees of freedom
+## AIC: 210.85
+## 
+## Number of Fisher Scoring iterations: 4</code></pre>
+<ul>
+<li>If a GLM is working appropriately and there is no overdispersion, then residual deviance (48.040) and its degrees of freedom (48) should be equal</li>
+<li>Perform <span class="math inline">\(\frac{residual~deviance}{residual~degrees~of~freedom}\)</span>
+</li>
+<li>Then the output is a ‘dispersion index (DI)’ which should be approximately 1
+<ul>
+<li>If much bigger than 1, then the data are overdispersed
+<ul>
+<li>As a rule of thumb, if <span class="math inline">\(DI \ge 2\)</span>
+</li>
+</ul>
+</li>
+<li>If it is much less than 1, then the data are underdispersed (this is rare)</li>
+</ul>
+</li>
+<li>Fortunately, the soay data have normal dispersion levels</li>
+<li>If data are overdispersed, then you can model the data differently</li>
+<li>A simple fix is to change the family in <code><a href="https://rdrr.io/r/stats/glm.html">glm()</a></code> from family = poisson to family = quasipoisson
+<ul>
+<li>a quasi model works just like the glm but it also estimates the dispersion index in a much more clever way than we did</li>
+<li>Once this index value is known, then R can adjust the p-values accordingly</li>
+</ul>
+</li>
+<li>Can also switch to a negative binomial family
+<ul>
+<li>A negative binomial distribution is thought of as being more flexible than a Poisson distribution</li>
+<li>The variance increases with the mean, but in a less constrained way. The variance does not have to equal the mean</li>
+</ul>
+</li>
+</ul>
+<div class="sourceCode" id="cb231"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">soay.glm2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/glm.html">glm</a></span><span class="op">(</span><span class="va">fitness</span> <span class="op">~</span> <span class="va">body.size</span>, data <span class="op">=</span> <span class="va">soay</span>, 
+                family <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/family.html">quasipoisson</a></span><span class="op">(</span>
+                  link <span class="op">=</span> <span class="va">log</span><span class="op">)</span><span class="op">)</span> 
+<span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">soay.glm2</span><span class="op">)</span></code></pre></div>
+<pre><code>## 
+## Call:
+## glm(formula = fitness ~ body.size, family = quasipoisson(link = log), 
+##     data = soay)
+## 
+## Deviance Residuals: 
+##     Min       1Q   Median       3Q      Max  
+## -2.7634  -0.6275   0.1142   0.5370   1.9578  
+## 
+## Coefficients:
+##             Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept) -2.42203    0.65967  -3.672 0.000605 ***
+## body.size    0.54087    0.08851   6.111  1.7e-07 ***
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## (Dispersion parameter for quasipoisson family taken to be 0.9026887)
+## 
+##     Null deviance: 85.081  on 49  degrees of freedom
+## Residual deviance: 48.040  on 48  degrees of freedom
+## AIC: NA
+## 
+## Number of Fisher Scoring iterations: 4</code></pre>
+<ul>
+<li>The only difference between this summary statistics table and the original one for the soay glm is the p-values. They are based on a method that accounts for over/underdispersion</li>
+<li>One more thing. Need to tell R to take into account the estimated dispersion by:</li>
+</ul>
+<div class="sourceCode" id="cb233"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/stats/anova.html">anova</a></span><span class="op">(</span><span class="va">soay.glm</span>, 
+      test <span class="op">=</span> <span class="st">"F"</span><span class="op">)</span> <span class="co">#instead of Chisq</span></code></pre></div>
+<pre><code>## Analysis of Deviance Table
+## 
+## Model: poisson, link: log
+## 
+## Response: fitness
+## 
+## Terms added sequentially (first to last)
+## 
+## 
+##           Df Deviance Resid. Df Resid. Dev     F    Pr(&gt;F)    
+## NULL                         49     85.081                    
+## body.size  1   37.041        48     48.040 37.04 1.157e-09 ***
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
+<div id="negative-binomials" class="section level4" number="7.4.1.1">
+<h4>
+<span class="header-section-number">7.4.1.1</span> Negative binomials<a class="anchor" aria-label="anchor" href="#negative-binomials"><i class="fas fa-link"></i></a>
+</h4>
+<ul>
+<li>Use <code>glm.nb()</code> to build negative binomial models from the <em>MASS</em> package (base-R)</li>
+<li>There is little else new that I need to learn</li>
+<li>The default link function is the natural log, but can check ?glm.nb for alternatives</li>
+<li>Neither quasi or negative binomial models appropriately deal with overdispersion that is caused by non-independence
+<ul>
+<li>This is the job of mixed models, which will not be discussed in this text</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div id="zero-inflation" class="section level3" number="7.4.2">
+<h3>
+<span class="header-section-number">7.4.2</span> Zero inflation<a class="anchor" aria-label="anchor" href="#zero-inflation"><i class="fas fa-link"></i></a>
+</h3>
+<ul>
+<li>One specific source of overdispersion in Poisson-like count data is known as zero-inflation</li>
+<li>This occurs when there are too many zeroes relative to the expected number for whichever distribution is being used
+<ul>
+<li>If count is zero-inflated, you can often spot it with a chart of raw counts (i.e. spike at 0 on a bar chart - often results from zero-inflation)</li>
+</ul>
+</li>
+<li>Biological counts are often zero-inflated
+<ul>
+<li>Occurs when binary results combine with a Poisson process</li>
+</ul>
+</li>
+</ul>
+</div>
+<div id="transformations-aint-all-bad" class="section level3" number="7.4.3">
+<h3>
+<span class="header-section-number">7.4.3</span> Transformations ain’t all bad<a class="anchor" aria-label="anchor" href="#transformations-aint-all-bad"><i class="fas fa-link"></i></a>
+</h3>
+<ul>
+<li>Sometimes transformations are appropriate, sometimes not</li>
+<li>When in doubt, build the model and test the diagnostics</li>
+<li>If the diagnostics look okay, then it’s probably fine to use the model</li>
+<li>Advantages of using transformations:
+<ul>
+<li>They work well when the data are far away from zero (no zeroes), but don’t span orders of magnitiude</li>
+<li>Can analyze “split-plot” designs fairly easily</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+</div>
+  <div class="chapter-nav">
+<div class="prev"><a href="advancing-statistics-in-r.html"><span class="header-section-number">6</span> Advancing Statistics in R</a></div>
+<div class="next"><a href="chapter-8-pimping-your-plots.html"><span class="header-section-number">8</span> Chapter 8: Pimping Your Plots</a></div>
+</div></main><div class="col-md-3 col-lg-2 d-none d-md-block sidebar sidebar-chapter">
+    <nav id="toc" data-toggle="toc" aria-label="On this page"><h2>On this page</h2>
+      <ul class="nav navbar-nav">
+<li>
+<a class="nav-link" href="#getting-started-with-generalized-linear-models"><span class="header-section-number">7</span> Getting Started with Generalized Linear Models</a><ul class="nav navbar-nav">
+<li><a class="nav-link" href="#counts-and-proportions-and-the-glm"><span class="header-section-number">7.0.1</span> Counts and Proportions and the GLM</a></li>
+<li><a class="nav-link" href="#key-terms-of-glm-models"><span class="header-section-number">7.0.2</span> Key terms of GLM models</a></li>
+</ul>
+</li>
+<li>
+<a class="nav-link" href="#counts-and-rates---poisson-glms"><span class="header-section-number">7.1</span> Counts and rates - Poisson GLMs</a><ul class="nav navbar-nav"><li><a class="nav-link" href="#counting-sheep---the-data-and-question"><span class="header-section-number">7.1.1</span> Counting Sheep - the data and question</a></li></ul>
+</li>
+<li>
+<a class="nav-link" href="#doing-it-wrong"><span class="header-section-number">7.2</span> Doing it wrong</a><ul class="nav navbar-nav">
+<li><a class="nav-link" href="#doing-it-wrong-diagnosing-the-problems"><span class="header-section-number">7.2.1</span> Doing it wrong: diagnosing the problems</a></li>
+<li><a class="nav-link" href="#the-poisson-distribution---a-solution"><span class="header-section-number">7.2.2</span> The Poisson distribution - a solution</a></li>
+</ul>
+</li>
+<li>
+<a class="nav-link" href="#doing-it-right---the-poisson-glm"><span class="header-section-number">7.3</span> Doing it right - the Poisson GLM</a><ul class="nav navbar-nav">
+<li><a class="nav-link" href="#anatomy-of-a-glm"><span class="header-section-number">7.3.1</span> Anatomy of a GLM</a></li>
+<li><a class="nav-link" href="#doing-it-right---actually-fitting-the-model"><span class="header-section-number">7.3.2</span> Doing it right - actually fitting the model</a></li>
+<li><a class="nav-link" href="#doing-it-right---the-diagnostics"><span class="header-section-number">7.3.3</span> Doing it right - the diagnostics</a></li>
+<li><a class="nav-link" href="#doing-it-right---anova-and-summary"><span class="header-section-number">7.3.4</span> Doing it right - anova() and summary()</a></li>
+<li><a class="nav-link" href="#making-a-beautiful-graph"><span class="header-section-number">7.3.5</span> Making a beautiful graph</a></li>
+</ul>
+</li>
+<li>
+<a class="nav-link" href="#when-a-poisson-glm-isnt-good-for-counts"><span class="header-section-number">7.4</span> When a Poisson GLM isn’t good for counts</a><ul class="nav navbar-nav">
+<li><a class="nav-link" href="#overdispersion"><span class="header-section-number">7.4.1</span> Overdispersion</a></li>
+<li><a class="nav-link" href="#zero-inflation"><span class="header-section-number">7.4.2</span> Zero inflation</a></li>
+<li><a class="nav-link" href="#transformations-aint-all-bad"><span class="header-section-number">7.4.3</span> Transformations ain’t all bad</a></li>
+</ul>
+</li>
+</ul>
+
+      <div class="book-extra">
+        <ul class="list-unstyled">
+<li><a id="book-source" href="https://github.com/rstudio/bookdown-demo/blob/master/07_GLM.Rmd">View source <i class="fab fa-github"></i></a></li>
+          <li><a id="book-edit" href="https://github.com/rstudio/bookdown-demo/edit/master/07_GLM.Rmd">Edit this page <i class="fab fa-github"></i></a></li>
+        </ul>
+</div>
+    </nav>
+</div>
+
+</div>
+</div> <!-- .container -->
+
+<footer class="bg-primary text-light mt-5"><div class="container"><div class="row">
+
+  <div class="col-12 col-md-6 mt-3">
+    <p>"<strong>A Guide to Getting Started with R</strong>" was written by Pete Apicella. It was last built on 2022-07-18.</p>
+  </div>
+
+  <div class="col-12 col-md-6 mt-3">
+    <p>This book was built by the <a class="text-light" href="https://bookdown.org">bookdown</a> R package.</p>
+  </div>
+
+</div></div>
+</footer><!-- dynamically load mathjax for compatibility with self-contained --><script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script><script type="text/x-mathjax-config">const popovers = document.querySelectorAll('a.footnote-ref[data-toggle="popover"]');
+for (let popover of popovers) {
+  const div = document.createElement('div');
+  div.setAttribute('style', 'position: absolute; top: 0, left:0; width:0, height:0, overflow: hidden; visibility: hidden;');
+  div.innerHTML = popover.getAttribute('data-content');
+
+  var has_math = div.querySelector("span.math");
+  if (has_math) {
+    document.body.appendChild(div);
+    MathJax.Hub.Queue(["Typeset", MathJax.Hub, div]);
+    MathJax.Hub.Queue(function() {
+      popover.setAttribute('data-content', div.innerHTML);
+      document.body.removeChild(div);
+    })
+  }
+}
+</script>
+</body>
+</html>
